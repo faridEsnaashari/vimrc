@@ -1,0 +1,5 @@
+<form action="" method="">
+  <label for=""></label>
+  <input type="text" id="" name="">
+  <input type="submit" value="Submit">
+</form>
