@@ -101,6 +101,9 @@ call plug#begin('~/.vim/plugged')
 "   a nice tool for auto compliation and some stuff like that, that make vim a
 "   nice IDE for you
     Plug 'neoclide/coc.nvim' , { 'branch' : 'release'  }
+
+"   this is tabnine plugin. It's awsome artifitial compliation for coding.
+    Plug 'codota/tabnine-vim'
 call plug#end()
 
 
@@ -222,7 +225,11 @@ nnoremap ,ce <Esc>:read ~/.vim/snippet/consoleerror.txt<CR>==f)i
 
 "trycatch js
 "press ,tc to print a js try catch
-nnoremap ,tc <Esc>:read ~/.vim/snippet/tryCatch.txt<CR><S-v>3j=o
+nnoremap ,tc <Esc>:read ~/.vim/snippet/tryCatch.txt<CR><S-v>3j=
+
+"useEffect ReactJS
+"press ,ue to print a simple form of react useEffect
+nnoremap ,ue <Esc>:read ~/.vim/snippet/useEffect.txt<CR>==f]i
 
 "htmlStructure js
 "press ,html to print a simple html structure
