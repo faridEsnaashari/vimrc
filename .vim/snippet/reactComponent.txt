@@ -1,0 +1,7 @@
+const Component = props => {
+    return(
+        <p>salam</p>
+    );
+};
+
+export default Component;
