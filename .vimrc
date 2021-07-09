@@ -38,6 +38,9 @@ set incsearch
 set nohlsearch
 " remove highlight from search results by one tab on space button. and
 " reEnable it by two times tab on space button
+
+nmap <C-m><C-j> ^f:llct;"<ESC>p<ESC>f;r,^f-xv<S-u><ESC>==
+
 nmap <Space> :set nohlsearch<CR>
 nmap <Space><Space> :set hlsearch<CR>
 
@@ -136,6 +139,11 @@ nmap <C-S-d> md
 " use crtl-shift-a to create a new file or directory when you on nerdtree window.
 nmap <C-S-a> ma
 
+" <C-a> use for increase numbers. But nerdtree plugin map it to create a new
+" node. this command undo its mapping to normal.(creating nodes in nerdtree
+" can be done by <C-S-a>)
+unmap <C-a>
+
 " copy and paste is a little tricky on vim. addition to usual vim copy and
 " paste, you can copy something with ctrl-shift-y to copy that thing to system
 " clipboard(you should be sure that your version of vim supports clipboard. I
@@ -227,10 +235,6 @@ nnoremap ,ce <Esc>:read ~/.vim/snippet/consoleerror.txt<CR>==f)i
 "press ,tc to print a js try catch
 nnoremap ,tc <Esc>:read ~/.vim/snippet/tryCatch.txt<CR><S-v>3j=
 
-"useEffect ReactJS
-"press ,ue to print a simple form of react useEffect
-nnoremap ,ue <Esc>:read ~/.vim/snippet/useEffect.txt<CR>==f]i
-
 "htmlStructure js
 "press ,html to print a simple html structure
 nnoremap ,html <Esc>:read ~/.vim/snippet/html.txt<CR><S-v>10j=7jo
@@ -238,6 +242,40 @@ nnoremap ,html <Esc>:read ~/.vim/snippet/html.txt<CR><S-v>10j=7jo
 "htmlFormStructure js
 "press ,form to print a simple html form structure
 nnoremap ,form <Esc>:read ~/.vim/snippet/form.txt<CR><S-v>4j=3ei
+
+
+""""""""""""""""""""""""""""""""""
+"snippets ReactJS
+""""""""""""""""""""""""""""""""""
+
+"useEffect ReactJS
+"press ,ue to print a simple form of react useEffect
+nnoremap ,ue <Esc>:read ~/.vim/snippet/useEffect.txt<CR>==f]i
+
+"useState ReactJS
+"press ,us to print a simple form of react useState
+nnoremap ,us <Esc>:read ~/.vim/snippet/useState.txt<CR>==wlli
+
+"useReducer ReactJS
+"press ,ur to print a simple form of react useReducer
+nnoremap ,ur <Esc>:read ~/.vim/snippet/useReducer.txt<CR>==eelli
+
+"component structure ReactJS
+"press ,comp to print a simple form of react component
+nnoremap ,comp <Esc>:read ~/.vim/snippet/reactComponent.txt<CR>wlciw
+
+"import useEffect ReactJS
+"press ,iue to print a simple form of importing react useEffect
+nnoremap ,iue gg<Esc>:read ~/.vim/snippet/importUseEffect.txt<CR>ddk<S-p>''
+
+"import useState ReactJS
+"press ,ius to print a simple form of importing react useState
+nnoremap ,ius gg<Esc>:read ~/.vim/snippet/importUseState.txt<CR>ddk<S-p>''
+
+"import useReducer ReactJS
+"press ,iur to print a simple form of importing react useReducer
+nnoremap ,iur gg<Esc>:read ~/.vim/snippet/importUseReducer.txt<CR>ddk<S-p>''
+
 
 """"""""""""""""""""""""""""""""""
 "commenter
