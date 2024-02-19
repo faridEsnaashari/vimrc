@@ -4,6 +4,9 @@ set directory=~/.vim/backups
 "active mouse
 set mouse=a
 
+"open a terminal vertically
+nmap ,term :vsplit<CR>:term<CR><C-w>k:q<CR>
+
 " open this vim config file(~/.vimrc) in new tab when execute ':Vimrc' in
 " command mode
 command! Vimrc tabe ~/.vimrc
@@ -15,8 +18,8 @@ set encoding=UTF-8
 
 " these settings are about indentation. with these settings, indentation in
 " files are 4 space.
-set tabstop=4 softtabstop=4
-set shiftwidth=4
+set tabstop=2 softtabstop=2
+set shiftwidth=2
 set expandtab
 set expandtab
 set smartindent
@@ -36,13 +39,26 @@ set incsearch
 
 " remove highlight search results in whole file.
 set nohlsearch
+
 " remove highlight from search results by one tab on space button. and
 " reEnable it by two times tab on space button
-
-nmap <C-m><C-j> ^f:llct;"<ESC>p<ESC>f;r,^f-xv<S-u><ESC>==
-
 nmap <Space> :set nohlsearch<CR>
 nmap <Space><Space> :set hlsearch<CR>
+
+" converting jss to css
+nmap <C-j><C-m> ^f:llci"<BS><ESC>pf,r;^:set noic<CR><S-v>/\%V[A-Z]<CR><ESC>vui-<ESC>==j<ESC>
+
+" converting css to jss
+nmap <C-m><C-j> ^f:llct;"<ESC>p<ESC>f;r,^f-xv<S-u><ESC>==j
+
+" resize window to the left using (crtl + w) (crtl + L)
+" resize window to the right using (crtl + w) (crtl + h)
+" resize window to the top using (crtl + w) (crtl + k)
+" resize window to the bottom using (crtl + w) (crtl + j)
+nmap <C-w><C-l> <C-w>>
+nmap <C-w><C-h> <C-w><
+nmap <C-w><C-k> <C-w>-
+nmap <C-w><C-j> <C-w>+
 
 " ignore letters case in search results
 set ic
@@ -68,6 +84,18 @@ set splitright
 " then run this command in vim:
 " :PlugInstall
 call plug#begin('~/.vim/plugged')
+"   plugin for use eslint and prettier
+    "Plug 'dense-analysis/ale'
+    
+"   multi cursor
+    "Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+
+"   to show git changes on opened files
+    Plug 'airblade/vim-gitgutter'
+
+"   prettier on save
+    Plug 'prettier/vim-prettier', { 'do': 'npm install --frozen-lockfile --production' }
+
 "   this one is a greate file explorer. its configurations are at in the following
     Plug 'preservim/nerdtree'
 
@@ -95,10 +123,12 @@ call plug#begin('~/.vim/plugged')
     Plug 'ryanoasis/vim-devicons'
 
 "   these four cool plugins provide nice things that make it easy to work with
-"   js, ts, jsx and graphql. you can find appropriate plugins about your needs
+"   js, ts, jsx, vue and graphql. you can find appropriate plugins about your needs
     Plug 'pangloss/vim-javascript'    
-    Plug 'leafgarland/typescript-vim' 
+    "Plug 'leafgarland/typescript-vim' 
+    Plug 'HerringtonDarkholme/yats.vim' 
     Plug 'maxmellon/vim-jsx-pretty'   
+    Plug 'posva/vim-vue'
     Plug 'jparise/vim-graphql'
 
 "   a nice tool for auto compliation and some stuff like that, that make vim a
@@ -106,9 +136,20 @@ call plug#begin('~/.vim/plugged')
     Plug 'neoclide/coc.nvim' , { 'branch' : 'release'  }
 
 "   this is tabnine plugin. It's awsome artifitial compliation for coding.
-    Plug 'codota/tabnine-vim'
+    "Plug 'codota/tabnine-vim'
+
+    Plug 'chrisbra/Colorizer'
+
+    Plug 'itchyny/vim-gitbranch'
+
+    "Plug 'faridEsnaashari/farid-vim-dracula', { 'as': 'dracula' }
+    Plug 'dracula/vim', { 'as': 'dracula' }
+    "Plug 'joshdick/onedark.vim', { 'as': 'onedark' }
 call plug#end()
 
+
+"   just use pug and scss syntaxt highliter. this is for posva/vim-vue plugin.
+let g:vue_pre_processors = ['pug', 'scss']
 
 " these configs are about airLine plugin. I spend some time and set these for
 " my self. you can get more details on https://github.com/vim-airline/vim-airline and customize for you own 
@@ -121,9 +162,21 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline#extensions#tabline#show_tab_count = 2
 let g:airline#extensions#tabline#show_tab_nr = 0
 let g:airline#extensions#tabline#show_tab_type = 0
+let g:lightline = {
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'gitbranch#name'
+      \ },
+      \ }
 " use crtl-l and crtl-h for moving between opened tabs
 map <C-l> <Plug>AirlineSelectNextTab
 map <C-h> <Plug>AirlineSelectPrevTab
+
+" use crtl-shift-f p to format jsx props
+nmap <S-f>p f<<S-f><ellvf}xi<CR><ESC>p==f}lf><S-f>}v<S-6>f}lxkp
 
 " press ctrl-n to open or close nerdtree(the plugin I installed that use as
 " file explorer)
@@ -142,7 +195,7 @@ nmap <C-S-a> ma
 " <C-a> use for increase numbers. But nerdtree plugin map it to create a new
 " node. this command undo its mapping to normal.(creating nodes in nerdtree
 " can be done by <C-S-a>)
-unmap <C-a>
+" unmap <C-a> 
 
 " copy and paste is a little tricky on vim. addition to usual vim copy and
 " paste, you can copy something with ctrl-shift-y to copy that thing to system
@@ -169,22 +222,31 @@ augroup END
     exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
  endfunction
 
-   call NERDTreeHighlightFile('jade', 'green', 'none', 'green', '#151515')
-   call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#151515')
-   call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#151515')
-   call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', '#151515')
-   call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', '#151515')
-   call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', '#151515')
-   call NERDTreeHighlightFile('json', 'yellow', 'none', 'yellow', '#151515')
-   call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', '#151515')
-   call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', '#151515')
-   call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#151515')
-   call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
-   call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
-   call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
-   call NERDTreeHighlightFile('cs', 'green', 'none', 'green', 'green')
-   call NERDTreeHighlightFile('ts', 'cyan', 'none', 'cyan', 'cyan')
+   call NERDTreeHighlightFile('jade', 'green', 'none', 'green', '#282A36')
+   call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#282A36')
+   call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#282A36')
+   call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', '#282A36')
+   call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', '#282A36')
+   call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', '#282A36')
+   call NERDTreeHighlightFile('json', 'yellow', 'none', 'yellow', '#282A36')
+   call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', '#282A36')
+   call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', '#282A36')
+   call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#282A36')
+   call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#282A36')
+   call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#282A36')
+   call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#282A36')
+   call NERDTreeHighlightFile('cs', 'green', 'none', 'green', '#282A36')
+   call NERDTreeHighlightFile('ts', 'cyan', 'none', 'cyan', '#282A36')
    
+
+
+
+""""""""""""""""""""""""""""""""""
+"coc(autoCompletation) config
+""""""""""""""""""""""""""""""""""
+set termguicolors
+colorscheme dracula
+"colorscheme onedark
 
 
 
@@ -195,7 +257,98 @@ augroup END
 let g:coc_disable_startup_warning = 1
 
 
+nmap <leader>rn <Plug>(coc-rename)
+nmap <leader>cr :CocRestart<CR><Esc>:CocStart<CR>
 
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+let g:coc_global_extensions = [
+  \ 'coc-snippets',
+  \ 'coc-pairs',
+  \ 'coc-eslint',
+  \ 'coc-tsserver',
+  \ 'coc-prettier',
+  \ 'coc-json',
+  \ 'coc-flow',
+  \ ]
+
+" go to next and prev diagnostic
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+nmap <silent> gy <Plug>(coc-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" show word detail whith D
+nmap <silent> D :call ShowDocumentation()<CR>
+
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+
+""""""""""""""""""""""""""""""""""
+"colorizer config
+""""""""""""""""""""""""""""""""""
+" Using X11 color support instead of W3 color support.
+let g:colorizer_x11_names = 1
+
+" Colorizer only enables on these file types. 
+let g:colorizer_auto_filetype='css,html,js,ts,scss,less,htm,vimrc'
+
+" Custome colors
+let g:colorizer_custom_colors = { 'amber': '#FFBF00', 'teal': '#008080'}
+
+" Color highlighting enables automatically on these files when they are opened
+:au BufNewFile,BufRead *.css,*.html,*.htm,*.js,*.less,*.scss,*.ts,*.vimrc  :ColorHighlight!
+
+" Disables color highlighting
+nmap <C-e><C-h><C-h> :ColorClear<CR>
+
+" Enables color highlighting
+nmap <C-e><C-h> :ColorHighlight<CR>
+
+
+
+
+
+
+""""""""""""""""""""""""""""""""""
+"vim-prettier
+""""""""""""""""""""""""""""""""""
+let g:prettier#autoformat = 1
+let g:prettier#autoformat_require_pragma = 0
+
+
+""""""""""""""""""""""""""""""""""
+"vim-gitgutter
+""""""""""""""""""""""""""""""""""
+highlight SignColumn ctermbg=black
+
+
+
+""""""""""""""""""""""""""""""""""
+"ale
+""""""""""""""""""""""""""""""""""
+let b:ale_linters = {'javascript': ['eslint']}
+"let g:ale_fix_on_save = 1
+let g:ale_sign_error = '>>'
+let g:ale_sign_warning = '--'
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+"let g:airline#extensions#ale#enabled = 1
+let g:ale_fixers = {'javascript': ['prettier', 'eslint']}
+"let g:ale_completion_enabled = 1
 
 
 
@@ -243,6 +396,10 @@ nnoremap ,html <Esc>:read ~/.vim/snippet/html.txt<CR><S-v>10j=7jo
 "press ,form to print a simple html form structure
 nnoremap ,form <Esc>:read ~/.vim/snippet/form.txt<CR><S-v>4j=3ei
 
+"div tag
+"press ,div to print a simple div tag
+nnoremap ,div <Esc>:read ~/.vim/snippet/div.txt<CR><S-v>j=eela
+
 
 """"""""""""""""""""""""""""""""""
 "snippets ReactJS
@@ -262,7 +419,11 @@ nnoremap ,ur <Esc>:read ~/.vim/snippet/useReducer.txt<CR>==eelli
 
 "component structure ReactJS
 "press ,comp to print a simple form of react component
-nnoremap ,comp <Esc>:read ~/.vim/snippet/reactComponent.txt<CR>wlciw
+nnoremap ,comp <Esc>:read ~/.vim/snippet/reactComponent.txt<CR>kddjjwwwlciw
+
+"client component structure NextJS
+"press ,ccomp to print a simple form of next client component
+nnoremap ,ccomp <Esc>:read ~/.vim/snippet/next/clientComponent.txt<CR>kddjjwlciw
 
 "import useEffect ReactJS
 "press ,iue to print a simple form of importing react useEffect
